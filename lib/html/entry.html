@@ -89,8 +89,6 @@
         };
         firebase.initializeApp(config);
 
-        /////////////////////////////////////
-
         /*********************************\
          * Fetch and display the entry *
         \*********************************/
@@ -133,12 +131,12 @@
             
             // delete button
             $('#delete').click(function(){
-                if(confirm('This entry will be permanently delete. Are you sure?')){
+                if(confirm('Tem certeza que deseja deletar?')){
                     Entry.remove(); // this will trigger Entry.on('value') immediatly
                 }
             });
         } else {
-            alert('This entry id does not exist');
+            alert('A entry não existe');
             window.location.href = 'index.html';
         }
 

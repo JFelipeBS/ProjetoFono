@@ -83,24 +83,14 @@
             measurementId: "G-VSHLMCFNTL"
         };
         firebase.initializeApp(config);
-
-        /////////////////////////////////////
-
         
-        /**********************\
-         * login status check *
-        \**********************/
-        
+        // ver se o user esta autenticado        
         firebase.auth().onAuthStateChanged(function (user) {
-            if (user) { 
-                
+            if (user) {  // só se tiver autenticado
                 // init CKEditor
                 CKEDITOR.replace('content');
                 
-                /***************************************************\
-                 * Process form data and save to Firebase database *
-                \***************************************************/
-                
+                // processa e salva no firebase
                 $('#new_entry').submit(function(e){
                     e.preventDefault();
                     
@@ -123,8 +113,6 @@
                     
                     return false;
                 });
-                
-                
             }else{
                 // if not logged in
                 alert('Please login first')
@@ -132,10 +120,6 @@
                 
             }
         });
-        
     </script>
-
-
 </body>
-
 </html>
