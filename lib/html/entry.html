@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Firebase - Entry</title>
+    <title>Post</title>
 
     <!-- Bootstrap -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,58 +19,65 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="justify-content-center flex-wrap">
         <br>
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-expand-lg navbar-light d-flex" style="background-color: #e3f1fd;">
             <div class="container-fluid">
-                <div class="navbar-header">
-                   <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <p style="justify-content: center; align-items: center; margin-top: 15px; margin-left: 2px;" 
-                    >Trabalho BD 2 - Firebase</p>
+                <div class="navbar-header p-2">
+                    <a class="nav-link fs-3 text-dark" href="index.html">Trabalho BD 2 - Firebase</a>
                 </div>
                 <div class="collapse navbar-collapse" id="nav">
                     <ul class="nav navbar-nav">
-                        <li><a href="index.html">Read</a></li>
-                        <li><a href="login.html">Login</a></li>
-                        <li><a href="create.html">Create</a></li>
+                        <li class="nav-item fs-5"><a class="nav-link text-dark" href="index.html">Posts</a></li>
+                        <li class="nav-item fs-5"><a class="nav-link text-dark" href="login.html">Login</a></li>
+                        <li class="nav-item active fs-5"><a class="nav-link text-dark" href="create.html">Criar post</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
+        
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h1 data-bind="title">Loading...</h1>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <article>
 
-        <article>
-            <h1 data-bind="title">Carregando...</h1>
-
-            <small>
-                By <span data-bind="author"></span> | 
-                Updated at <span data-bind="updatedAt-formatted"></span> | 
-                <span data-bind="views">0</span> Views
-            </small>
-
-            <hr>
-
-            <div data-bind="content"></div>
-            
-            <hr>
-            <div class="text-right">
-                <button id="delete" class="btn btn-lg btn-danger">Deletar</button>
-                &nbsp;
-                &nbsp;
-                &nbsp;
-                &nbsp;
-                <a href="" id="update" class="btn btn-lg btn-primary">Atualizar</a>
+                                    <small>
+                                        Por <span data-bind="author"></span> | 
+                                        Atualizado as <span data-bind="updatedAt-formatted"></span> | 
+                                        <span data-bind="views">0</span> Views
+                                    </small>
+                        
+                                    <hr>
+                        
+                                    <div data-bind="content"></div>
+                                    
+                                    <hr>
+                                    <div class="text-right">
+                                        <button id="delete" class="btn btn-lg btn-danger">Deletar</button>
+                                        &nbsp;
+                                        &nbsp;
+                                        &nbsp;
+                                        &nbsp;
+                                        <a href="" id="update" class="btn btn-lg btn-primary">Atualizar</a>
+                                    </div>
+                        
+                                </article>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-        </article>
+        </div>
 
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
 
     <script src="//cdn.ckeditor.com/4.5.10/standard/ckeditor.js"></script>
@@ -166,7 +173,7 @@
 
         function datetimeFormat(timestamp) {
             var dateObj = new Date(timestamp);
-            var en_month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var en_month = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
             return dateObj.getDate() + ' ' + en_month[dateObj.getMonth()] + ' ' + pad2Digit(dateObj.getFullYear()) + ' ' + pad2Digit(dateObj.getHours()) + ':' + pad2Digit(dateObj.getMinutes());
         }
     </script>

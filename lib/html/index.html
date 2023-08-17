@@ -5,45 +5,49 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Firebase - List</title>
+    <title>Posts</title>
 
     <!-- Bootstrap -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 
 <body>
-    <div class="container">
+    <div class="justify-content-center flex-wrap">
         <br>
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-expand-lg navbar-light d-flex" style="background-color: #e3f1fd;">
             <div class="container-fluid">
-                <div class="navbar-header">
-                   <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <p style="justify-content: center; align-items: center; margin-top: 15px; margin-left: 2px;" 
-                    >Trabalho BD 2 - Firebase</p>
+                <div class="navbar-header p-2">
+                    <a class="nav-link fs-3 text-dark" href="index.html">Trabalho BD 2 - Firebase</a>
                 </div>
                 <div class="collapse navbar-collapse" id="nav">
                     <ul class="nav navbar-nav">
-                        <li><a href="index.html">Read</a></li>
-                        <li><a href="login.html">Login</a></li>
-                        <li><a href="create.html">Create</a></li>
+                        <li class="nav-item active fs-5"><a class="nav-link text-dark" href="index.html">Posts</a></li>
+                        <li class="nav-item fs-5"><a class="nav-link text-dark" href="login.html">Login</a></li>
+                        <li class="nav-item fs-5"><a class="nav-link text-dark" href="create.html">Criar post</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <h1>Firebase - Data Disponível</h1>
 
-        <div id="entries" class="row">
-
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h1>Posts</h1>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li id="entries" class="list-group-item"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
     <script>
         // firebase config
@@ -60,6 +64,42 @@
     
         firebase.initializeApp(config);
 
+        // ver se o user esta autenticado        
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {  // só se tiver autenticado
+                // init CKEditor
+                CKEDITOR.replace('content');
+                
+                // processa e salva no firebase
+                $('#new_entry').submit(function(e){
+                    e.preventDefault();
+                    
+                    var entry = {};
+                    entry.title = $(this).find('[name="title"]').val();
+                    entry.content = CKEDITOR.instances['content'].getData();
+                    entry.createdAt = new Date().getTime();
+                    entry.updatedAt = entry.createdAt;
+                    entry.views = 0;
+                    entry.author = user.email;
+                    
+                    var Entry = firebase.database().ref('Entry');
+                    
+                    Entry.push(entry).then(function(data){
+                        window.location.href = 'entry.html?id='+data.getKey()
+                    }).catch(function(error){
+                        alert(error);
+                        console.error(error);
+                    })
+                    
+                    return false;
+                });
+            }else{
+                // if not logged in
+                alert('Faça o Login!')
+                window.location.href = 'login.html';
+            }
+        });
+
         /////////////////////////////////////
 
         var Blog = firebase.database().ref('Entry').orderByChild('updatedAt');
@@ -70,19 +110,19 @@
             var html = '';
             r.forEach(function (item) {
                 entry = item.val()
-                html = '<div class="col-md-4">' +
-                    '<a href="entry.html?id=' + item.getKey() + '" style="text-decoration:none!important;">' +
+                html = '<div class="container p-md-2">' +
+                    '<a class="text-dark" href="entry.html?id=' + item.getKey() + '" style="text-decoration:none!important;">' +
                     '<div class="panel panel-info">' +
                     '<div class="panel-heading">' +
                     '<h3 class="panel-title">' + excerpt(entry.title, 140) + '</h3>' +
                     '</div>' +
                     '<div class="panel-body">' +
-                    '<small>By ' + entry.author + ' | ' + datetimeFormat(entry.updatedAt) + ' | ' + entry.views + ' views</small>' +
+                    '<small>Por ' + entry.author + ' | ' + datetimeFormat(entry.updatedAt) + ' | ' + entry.views + ' views</small>' +
                     '<hr><p>' + excerpt(entry.content, 250) + '</p>' +
                     '</div>' +
                     '</div>' +
                     '</a>' +
-                    '</div>' + html; // prepend the entry because we need to display it in reverse order
+                    '</div>' + html;
             });
 
             $('#entries').html(html);
@@ -113,7 +153,7 @@
 
         function datetimeFormat(timestamp) {
             var dateObj = new Date(timestamp);
-            var en_month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var en_month = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
             return dateObj.getDate() + ' ' + en_month[dateObj.getMonth()] + ' ' + pad2Digit(dateObj.getFullYear()) + ' ' + pad2Digit(dateObj.getHours()) + ':' + pad2Digit(dateObj.getMinutes());
         }
     </script>
