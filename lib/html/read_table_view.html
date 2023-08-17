@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabela de Dados do Firebase</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .table-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 80%;
+      max-width: 800px;
+      background-color: white;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Idade</th>
+        </tr>
+      </thead>
+      <tbody id="data-body">
+        <!-- Dados do Firebase serão adicionados aqui -->
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-database.js"></script>
+  <script>
+      // Configuração do Firebase (substitua com suas informações)
+      var firebaseConfig = {
+        apiKey: "AIzaSyCwClvXF5-nOS0PbUW2_6eI5--EdHCMmAo",
+        authDomain: "trabalho-angelica.firebaseapp.com",
+        projectId: "trabalho-angelica",
+        storageBucket: "trabalho-angelica.appspot.com",
+        messagingSenderId: "276226297005",
+        appId: "1:276226297005:web:bd9bc6644688489153ca24",
+        measurementId: "G-VSHLMCFNTL"
+    };
+    fire
+    firebase.initializeApp(firebaseConfig);
+
+    // Referência ao nó do banco de dados
+    var database = firebase.database().ref("usuarios");
+
+    // Função para renderizar os dados na tabela
+    function renderData(data) {
+      var tableBody = document.getElementById("data-body");
+      tableBody.innerHTML = "";
+
+      data.forEach(function(item) {
+        var row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.nome}</td>
+          <td>${item.idade}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Puxar dados do Firebase e renderizar na tabela
+    database.on("value", function(snapshot) {
+      var data = [];
+      snapshot.forEach(function(childSnapshot) {
+        var childData = childSnapshot.val();
+        data.push({
+          id: childSnapshot.key,
+          nome: childData.nome,
+          idade: childData.idade
+        });
+      });
+
+      renderData(data);
+    });
+  </script>
+</body>
+</html>
