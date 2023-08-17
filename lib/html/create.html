@@ -51,6 +51,13 @@
                                 
                                 <br>
                                 <br>
+
+                                <h2>Upload de Arquivo</h2>
+                                <br>
+                                <input type="file" name="file" class="form-control col-md-12">
+
+                                <br>
+                                <br>
                                 
                                 <h2>Conteúdo</h2>
                                 <br>
@@ -115,7 +122,7 @@
                     if (selectedFile) {
                         var storageRef = firebase.storage().ref();
                         var fileRef = storageRef.child('uploads/' + selectedFile.name);
-                        
+
                         fileRef.put(selectedFile)
                             .then(function(snapshot) {
                                 console.log('Arquivo enviado com sucesso!');
@@ -123,7 +130,7 @@
                             })
                             .then(function(downloadURL) {
                                 entry.fileURL = downloadURL; // Armazena o URL do arquivo no objeto entry
-                                
+
                                 // Salva no banco de dados
                                 var Entry = firebase.database().ref('Entry');
                                 return Entry.push(entry);
