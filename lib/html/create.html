@@ -50,6 +50,13 @@
             
             <br>
             <br>
+
+            <h2>Upload de Arquivo</h2>
+            <br>
+            <input type="file" name="file" class="form-control col-md-12">
+            
+            <br>
+            <br>
             
             <h2>Conteúdo</h2>
             <br>
@@ -102,19 +109,50 @@
                     entry.views = 0;
                     entry.author = user.email;
                     
-                    var Entry = firebase.database().ref('Entry');
+                        // Lida com o upload do arquivo
+                        var fileInput = document.querySelector('input[type="file"]');
+                    var selectedFile = fileInput.files[0]; // Pega o arquivo selecionado
                     
-                    Entry.push(entry).then(function(data){
-                        window.location.href = 'entry.html?id='+data.getKey()
-                    }).catch(function(error){
-                        alert(error);
-                        console.error(error);
-                    })
+                    if (selectedFile) {
+                        var storageRef = firebase.storage().ref();
+                        var fileRef = storageRef.child('uploads/' + selectedFile.name);
+                        
+                        fileRef.put(selectedFile)
+                            .then(function(snapshot) {
+                                console.log('Arquivo enviado com sucesso!');
+                                return fileRef.getDownloadURL();
+                            })
+                            .then(function(downloadURL) {
+                                entry.fileURL = downloadURL; // Armazena o URL do arquivo no objeto entry
+                                
+                                // Salva no banco de dados
+                                var Entry = firebase.database().ref('Entry');
+                                return Entry.push(entry);
+                            })
+                            .then(function(data) {
+                                console.log('Dados salvos no banco de dados');
+                                window.location.href = 'entry.html?id=' + data.getKey();
+                            })
+                            .catch(function(error) {
+                                alert(error);
+                                console.error(error);
+                            });
+                    } else {
+                        // Se nenhum arquivo foi selecionado, salva apenas os dados no banco de dados
+                        var Entry = firebase.database().ref('Entry');
+                        Entry.push(entry).then(function(data) {
+                            console.log('Dados salvos no banco de dados');
+                            window.location.href = 'entry.html?id=' + data.getKey();
+                        }).catch(function(error) {
+                            alert(error);
+                            console.error(error);
+                        });
+                    }
                     
                     return false;
                 });
-            }else{
-                // if not logged in
+            } else {
+                // Se não estiver logado
                 alert('Faça login primeiro')
                 window.location.href = 'login.html';
             }
