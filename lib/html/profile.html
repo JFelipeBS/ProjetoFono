@@ -61,7 +61,7 @@
     <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
 
     <script>
-        // firebase config
+        // firebase configurações
         var config = {
             apiKey: "AIzaSyCwClvXF5-nOS0PbUW2_6eI5--EdHCMmAo",
             authDomain: "trabalho-angelica.firebaseapp.com",
@@ -74,13 +74,6 @@
         };
         firebase.initializeApp(config);
 
-        /////////////////////////////////////
-
-
-        /**********************\
-         * Check login status *
-        \**********************/
-
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
 
@@ -88,11 +81,10 @@
                 document.getElementById('profile').innerHTML = JSON.stringify(user, null, 2);
                 document.getElementById('logout').onclick = function () {
                     if (confirm('Logout?')) {
-                        firebase.auth().signOut(); // This will trigger onAuthStateChanged again, immediately.
+                        firebase.auth().signOut(); 
                     }
                 };
             } else {
-                // if not logged in yet
                 window.location.href = 'login.html';
 
             }

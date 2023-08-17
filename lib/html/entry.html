@@ -83,7 +83,7 @@
     <script src="//cdn.ckeditor.com/4.5.10/standard/ckeditor.js"></script>
 
     <script>
-        // firebase config
+        // firebase configurações
         var config = {
             apiKey: "AIzaSyCwClvXF5-nOS0PbUW2_6eI5--EdHCMmAo",
             authDomain: "trabalho-angelica.firebaseapp.com",
@@ -96,9 +96,6 @@
         };
         firebase.initializeApp(config);
 
-        /*********************************\
-         * Fetch and display the entry *
-        \*********************************/
 
         var entry_id = $_GET('id');
 
@@ -117,10 +114,8 @@
                         $(this).html(entry[$(this).data('bind')]);
                     });
                     
-                    // update title
                     document.title = 'Firebase - ' + entry.title;
                     
-                    // increase views count. once.
                     if (!added_views) {
                         added_views = true;
                         Entry.child('views').transaction(function (views) {
@@ -128,28 +123,22 @@
                         });
                     }
                     
-                } else { // content not found
+                } else { 
                     window.location.href = 'index.html';
                 }
             });
             
-            // update button
             $('#update').attr('href','update.html?id='+entry_id);
             
-            // delete button
             $('#delete').click(function(){
                 if(confirm('Tem certeza que deseja deletar?')){
-                    Entry.remove(); // this will trigger Entry.on('value') immediatly
+                    Entry.remove(); 
                 }
             });
         } else {
             alert('A entry não existe');
             window.location.href = 'index.html';
         }
-
-        /*************\
-         * Utilities *
-        \*************/
 
         function $_GET(key) {
             var queries = window.location.href.split('?').pop().split('&');
